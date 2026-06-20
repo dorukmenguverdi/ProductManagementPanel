@@ -19,7 +19,15 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite("Data Source=app.db"));
 
+// Sisteme diyoruz ki: "Biri senden IProductService isterse, ona ProductService sınıfını ver."
+builder.Services.AddScoped<ProductManagementPanel.Services.IProductService, ProductManagementPanel.Services.ProductService>();
+
+builder.Services.AddScoped<ProductManagementPanel.Services.IAuthService, ProductManagementPanel.Services.AuthService>();
+
+builder.Services.AddScoped<ProductManagementPanel.Services.IUserService, ProductManagementPanel.Services.UserService>();
+
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

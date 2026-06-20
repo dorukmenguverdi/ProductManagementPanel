@@ -42,7 +42,7 @@
                                     class="bi bi-check2-circle"></i></button>
                                 </form>
 
-                                @if (user.Username != User.Identity.Name)
+                                @if (user.Username != User.Identity?.Name)
                                 {
                                     <form asp-action="DeleteUser" method="post"
                                           onsubmit="return confirm('@user.Username adlı kullanıcıyı kalıcı olarak silmek istediğinize emin misiniz?');">

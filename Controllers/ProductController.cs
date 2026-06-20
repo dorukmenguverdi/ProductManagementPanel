@@ -1,91 +1,71 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ProductManagementPanel.Data;
 using ProductManagementPanel.Models;
+using ProductManagementPanel.Services; // Servisleri dahil ettik
 
 namespace ProductManagementPanel.Controllers
 {
     [Authorize]
     public class ProductController : Controller
     {
-        // Veritabanı bağlantımızı tutacak değişken
-        private readonly ApplicationDbContext _context;
+        // Artık ApplicationDbContext yerine servisimizi çağırıyoruz
+        private readonly IProductService _productService;
 
-        // Dependency Injection ile veritabanı köprümüzü Controller'a dahil ediyoruz (Constructor)
-        public ProductController(ApplicationDbContext context)
+        public ProductController(IProductService productService)
         {
-            _context = context;
+            _productService = productService;
         }
 
-        // 1. READ (Listeleme): /Product veya /Product/Index adresine girildiğinde çalışır
         public IActionResult Index()
         {
-            // Veritabanındaki tüm ürünleri liste halinde çekip View'a (Ekrana) gönderiyoruz.
-            var products = _context.Products.ToList();
+            // İş mantığı tamamen serviste, controller sadece sonucu alıp View'a iletiyor.
+            var products = _productService.GetAllProducts();
             return View(products);
         }
 
-        // 2. CREATE (Gösterme): Ürün ekleme formunu ekrana getiren metod (GET isteği)
         [Authorize(Roles = "Admin, Co-Admin")]
         public IActionResult Create()
         {
             return View();
         }
-        // 3. CREATE (Kaydetme): Kullanıcı formda 'Kaydet'e basınca çalışacak metod (POST isteği)
+
         [HttpPost]
         [Authorize(Roles = "Admin, Co-Admin")]
         public IActionResult Create(Product product)
         {
-            // Modelimizdeki kurallar (Required, StringLength vb.) ihlal edilmediyse
             if (ModelState.IsValid)
             {
-                _context.Products.Add(product); // Ürünü veritabanına ekle
-                _context.SaveChanges();         // Değişiklikleri kaydet
-                return RedirectToAction("Index"); // Kullanıcıyı tekrar listeleme sayfasına yönlendir
-            }
-            
-            // Eğer kural hatası varsa (örn: isim boş girildiyse) aynı formu hatalarla beraber geri göster
-            return View(product);
-        }
-
-        // --- GÜNCELLEME (UPDATE) İŞLEMLERİ ---
-
-        // 4. UPDATE (Gösterme): Güncellenecek ürünün bilgilerini forma getiren metod
-        public IActionResult Edit(int id)
-        {
-            var product = _context.Products.Find(id); // Veritabanından ID'ye göre ürünü bul
-            if (product == null)
-            {
-                return NotFound(); // Ürün yoksa hata sayfası döndür
-            }
-            return View(product); // Ürünü bulduysa bilgileriyle birlikte Edit sayfasına gönder
-        }
-
-        // 5. UPDATE (Kaydetme): Formda değişiklik yapıp 'Güncelle'ye basınca çalışır
-        [HttpPost]
-        public IActionResult Edit(Product product)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Products.Update(product); // EF Core bu nesnenin güncelleneceğini anlar
-                _context.SaveChanges();
+                _productService.AddProduct(product); // Veritabanı işlemi servise devredildi
                 return RedirectToAction("Index");
             }
             return View(product);
         }
 
-        // --- SİLME (DELETE) İŞLEMİ ---
+        public IActionResult Edit(int id)
+        {
+            var product = _productService.GetProductById(id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+            return View(product);
+        }
 
-        // 6. DELETE (Silme): Listeden sil butonuna basıldığında çalışır
+        [HttpPost]
+        public IActionResult Edit(Product product)
+        {
+            if (ModelState.IsValid)
+            {
+                _productService.UpdateProduct(product); // Veritabanı işlemi servise devredildi
+                return RedirectToAction("Index");
+            }
+            return View(product);
+        }
+
         [Authorize(Roles = "Admin, Co-Admin")]
         public IActionResult Delete(int id)
         {
-            var product = _context.Products.Find(id);
-            if (product != null)
-            {
-                _context.Products.Remove(product); // Ürünü veritabanından sil
-                _context.SaveChanges();
-            }
+            _productService.DeleteProduct(id); // Veritabanı işlemi servise devredildi
             return RedirectToAction("Index");
         }
     }

@@ -25,13 +25,12 @@
                         @if (User.Identity != null && User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" href="/Product/Index">Ürün Paneli</a>
+                                <a class="nav-link text-white" href="/Product/Index">Ürün Paneli</a>
                             </li>
-
                             @if (User.IsInRole("Admin"))
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark fw-bold text-primary" href="/User/Index">Kullanıcı Yönetimi</a>
+                                    <a class="nav-link text-info fw-bold" href="/User/Index">Kullanıcı Yönetimi</a>
                                 </li>
                             }
                         }
@@ -50,10 +49,10 @@
                         else
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" href="/Auth/Login">Giriş Yap</a>
+                                <a class="nav-link text-white" href="/Auth/Login">Giriş Yap</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" href="/Auth/Register">Kayıt Ol</a>
+                                <a class="nav-link text-white" href="/Auth/Register">Kayıt Ol</a>
                             </li>
                         }
                     </ul>

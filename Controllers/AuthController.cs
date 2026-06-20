@@ -1,80 +1,73 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
-using ProductManagementPanel.Data;
-using ProductManagementPanel.Models;
+using ProductManagementPanel.Services;
+using ProductManagementPanel.ViewModels;
 using System.Security.Claims;
 
 namespace ProductManagementPanel.Controllers
 {
     public class AuthController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IAuthService _authService;
 
-        public AuthController(ApplicationDbContext context)
+        // Artık ApplicationDbContext yok, IAuthService var
+        public AuthController(IAuthService authService)
         {
-            _context = context;
+            _authService = authService;
         }
 
-        // --- KAYIT OLMA EKRANI ---
         public IActionResult Register()
         {
             return View();
         }
 
         [HttpPost]
-        public IActionResult Register(User user)
+        public IActionResult Register(RegisterViewModel model)
         {
             if (ModelState.IsValid)
             {
-                // Mülakat Notu: Gerçek projelerde şifreler "Hash"lenerek (kriptolanarak) veritabanına kaydedilir. 
-                // Dar zamanlı bir task olduğu için şimdilik düz metin olarak kaydediyoruz.
-                _context.Users.Add(user);
-                _context.SaveChanges();
+                _authService.RegisterUser(model); // Veritabanı işini Servise devrettik
                 return RedirectToAction("Login");
             }
-            return View(user);
+            return View(model);
         }
 
-        // --- GİRİŞ YAPMA EKRANI ---
         public IActionResult Login()
         {
             return View();
         }
 
         [HttpPost]
-        public IActionResult Login(string username, string password)
+        public IActionResult Login(LoginViewModel model)
         {
-            // Veritabanında bu kullanıcı adı ve şifreye sahip biri var mı diye bakıyoruz
-            var user = _context.Users.FirstOrDefault(u => u.Username == username && u.Password == password);
-
-            if (user != null)
+            if (ModelState.IsValid)
             {
-                // 1. Kullanıcının dijital yaka kartını (Claims) hazırlıyoruz
-                var claims = new List<Claim>
+                // Doğrulama işini Servise devrettik. Bize ya User döner, ya da null.
+                var user = _authService.ValidateUser(model);
+
+                if (user != null)
                 {
-                    new Claim(ClaimTypes.Name, user.Username),
-                    new Claim(ClaimTypes.Role, user.Role) // En önemli kısım: Rol bilgisini çereze gömüyoruz!
-                };
+                    var claims = new List<Claim>
+                    {
+                        new Claim(ClaimTypes.Name, user.Username),
+                        new Claim(ClaimTypes.Role, user.Role)
+                    };
 
-                var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                    var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                    HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
 
-                // 2. Çerezi (Cookie) tarayıcıya verip sistemi açıyoruz
-                HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
+                    return RedirectToAction("Index", "Product");
+                }
 
-                // Başarılı girişte doğrudan Ürün listesine yönlendir
-                return RedirectToAction("Index", "Product");
+                ViewBag.Error = "Kullanıcı adı veya şifre hatalı!";
             }
-
-            // Eğer eşleşme yoksa hata mesajıyla aynı sayfayı geri döndür
-            ViewBag.Error = "Kullanıcı adı veya şifre hatalı!";
-            return View();
+            
+            return View(model);
         }
 
-        // --- ÇIKIŞ YAPMA ---
         public IActionResult Logout()
         {
-            // Çerezi silip güvenli çıkış yap
             HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Login");
         }
