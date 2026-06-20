@@ -125,3 +125,4 @@ C:\Users\alade\OneDrive\Masaüstü\ProductManagementPanel\obj\Debug\net8.0\refin
 C:\Users\alade\OneDrive\Masaüstü\ProductManagementPanel\obj\Debug\net8.0\ProductManagementPanel.pdb
 C:\Users\alade\OneDrive\Masaüstü\ProductManagementPanel\obj\Debug\net8.0\ProductManagementPanel.genruntimeconfig.cache
 C:\Users\alade\OneDrive\Masaüstü\ProductManagementPanel\obj\Debug\net8.0\ref\ProductManagementPanel.dll
+C:\Users\alade\OneDrive\Masaüstü\ProductManagementPanel\obj\Debug\net8.0\ProductManagementPanel.sourcelink.json

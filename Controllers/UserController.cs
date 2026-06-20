@@ -33,8 +33,22 @@ namespace ProductManagementPanel.Controllers
                 user.Role = newRole; // Kullanıcının yeni rolünü ata
                 _context.SaveChanges(); // Veritabanını güncelle
             }
-            
+
             // İşlem bitince aynı sayfaya geri dön
+            return RedirectToAction("Index");
+        }
+        
+        [HttpPost]
+        public IActionResult DeleteUser(int id)
+        {
+            var user = _context.Users.Find(id);
+
+            // Güvenlik önlemi: Kendi kendini silmeyi engelle!
+            if (user != null && user.Username != User.Identity.Name)
+            {
+                _context.Users.Remove(user);
+                _context.SaveChanges();
+            }
             return RedirectToAction("Index");
         }
     }

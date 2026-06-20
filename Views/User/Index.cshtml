@@ -21,24 +21,40 @@
             @foreach (var user in Model)
             {
                 <tr>
-                    <td>@user.Id</td>
-                    <td>@user.Username</td>
-                    <td><span class="badge bg-secondary">@user.Role</span></td>
+                    <td class="fw-bold text-muted">#@user.Id</td>
+                    <td><i class="bi bi-person-circle me-2 text-secondary"></i>@user.Username</td>
                     <td>
-                        <form asp-action="ChangeRole" method="post" class="d-flex align-items-center">
-                            <input type="hidden" name="id" value="@user.Id" />
-                            
-                            <select name="newRole" class="form-select form-select-sm me-2" style="width: 150px;">
-                                <option value="Admin">Admin</option>
-                                <option value="Co-Admin">Co-Admin</option>
-                                <option value="Personel">Personel</option>
-                            </select>
-                            
-                            <button type="submit" class="btn btn-sm btn-primary">Uygula</button>
-                        </form>
+                        <span
+                            class="badge @(user.Role == "Admin" ? "bg-danger" : user.Role == "Co-Admin" ? "bg-warning text-dark" : "bg-info text-dark") rounded-pill px-3 py-2">
+                            @user.Role
+                        </span>
                     </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-</div>
+                    <td>
+                        <div class="d-flex gap-2">
+                            <form asp-action="ChangeRole" method="post" class="d-flex">
+                                <input type="hidden" name="id" value="@user.Id" />
+                                <select name="newRole" class="form-select form-select-sm border-secondary me-2">
+                                    <option value="Admin" selected="@(user.Role == "Admin")">Admin</option>
+                                    <option value="Co-Admin" selected="@(user.Role == "Co-Admin")">Co-Admin</option>
+                                    <option value="Personel" selected="@(user.Role == "Personel")">Personel</option>
+                                </select>
+                                <button type="submit" class="btn btn-sm btn-outline-primary"><i
+                                    class="bi bi-check2-circle"></i></button>
+                                </form>
+
+                                @if (user.Username != User.Identity.Name)
+                                {
+                                    <form asp-action="DeleteUser" method="post"
+                                          onsubmit="return confirm('@user.Username adlı kullanıcıyı kalıcı olarak silmek istediğinize emin misiniz?');">
+                                        <input type="hidden" name="id" value="@user.Id" />
+                                        <button type="submit" class="btn btn-sm btn-outline-danger"><i
+                                            class="bi bi-trash"></i></button>
+                                        </form>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
