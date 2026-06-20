@@ -1,0 +1,45 @@
+@model IEnumerable<ProductManagementPanel.Models.Product>
+
+@{
+    ViewData["Title"] = "Ürün Listesi";
+}
+
+<div class="container mt-4">
+    <h2>Ürün Listesi</h2>
+    
+    @if (User.IsInRole("Admin") || User.IsInRole("Co-Admin"))
+    {
+        <a href="/Product/Create" class="btn btn-primary mb-3">Yeni Ürün Ekle</a>
+    }
+
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>Id</th>
+                <th>Ürün Adı</th>
+                <th>Fiyat (₺)</th>
+                <th>Stok</th>
+                <th>İşlemler</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Id</td>
+                    <td>@item.Name</td>
+                    <td>@item.Price</td>
+                    <td>@item.Stock</td>
+                    <td>
+                        <a href="/Product/Edit/@item.Id" class="btn btn-sm btn-warning">Düzenle</a>
+                        
+                        @if (User.IsInRole("Admin") || User.IsInRole("Co-Admin"))
+                        {
+                            <a href="/Product/Delete/@item.Id" class="btn btn-sm btn-danger" onclick="return confirm('Silmek istediğinize emin misiniz?');">Sil</a>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

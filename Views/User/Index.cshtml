@@ -1,0 +1,44 @@
+@model IEnumerable<ProductManagementPanel.Models.User>
+
+@{
+    ViewData["Title"] = "Kullanıcı Yönetimi";
+}
+
+<div class="container mt-4">
+    <h2>Kullanıcı Yönetimi (Admin Paneli)</h2>
+    <hr />
+
+    <table class="table table-bordered table-striped mt-3">
+        <thead class="table-dark">
+            <tr>
+                <th>Kullanıcı Id</th>
+                <th>Kullanıcı Adı</th>
+                <th>Mevcut Rol</th>
+                <th>Rol Ata</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model)
+            {
+                <tr>
+                    <td>@user.Id</td>
+                    <td>@user.Username</td>
+                    <td><span class="badge bg-secondary">@user.Role</span></td>
+                    <td>
+                        <form asp-action="ChangeRole" method="post" class="d-flex align-items-center">
+                            <input type="hidden" name="id" value="@user.Id" />
+                            
+                            <select name="newRole" class="form-select form-select-sm me-2" style="width: 150px;">
+                                <option value="Admin">Admin</option>
+                                <option value="Co-Admin">Co-Admin</option>
+                                <option value="Personel">Personel</option>
+                            </select>
+                            
+                            <button type="submit" class="btn btn-sm btn-primary">Uygula</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
