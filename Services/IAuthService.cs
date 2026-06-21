@@ -3,12 +3,11 @@ using ProductManagementPanel.ViewModels;
 
 namespace ProductManagementPanel.Services
 {
+    // Sistemin kimlik doğrulama (Authentication) ve kayıt işlemlerine ait iş mantığı sözleşmesini tanımlar.
     public interface IAuthService
     {
-        // Kayıt işlemini veritabanına işleyen yetenek
         void RegisterUser(RegisterViewModel model);
         
-        // Kullanıcı adı ve şifreyi kontrol edip, doğruysa User nesnesini döndüren yetenek
         User? ValidateUser(LoginViewModel model);
     }
 }

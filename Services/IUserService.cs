@@ -2,6 +2,7 @@ using ProductManagementPanel.Models;
 
 namespace ProductManagementPanel.Services
 {
+    // Sistemdeki kullanıcıları ve yetki rollerini yönetmek için gereken iş mantığı sözleşmesini (Interface) tanımlar.
     public interface IUserService
     {
         IEnumerable<User> GetAllUsers();

@@ -1,14 +1,17 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProductManagementPanel.Models;
-using ProductManagementPanel.Services; // Servisleri dahil ettik
+using ProductManagementPanel.Services; 
 
 namespace ProductManagementPanel.Controllers
 {
+    /// Ürünlerle ilgili HTTP isteklerini (GET/POST) karşılayan, yetkilendirme kontrollerini yapan ve 
+    /// iş mantığı için IProductService'e yönlendiren Controller sınıfı.
+    /// Tüm sınıf bazında, sisteme giriş yapmamış kullanıcıların erişimi engellenmiştir.
+
     [Authorize]
     public class ProductController : Controller
     {
-        // Artık ApplicationDbContext yerine servisimizi çağırıyoruz
         private readonly IProductService _productService;
 
         public ProductController(IProductService productService)
@@ -35,7 +38,7 @@ namespace ProductManagementPanel.Controllers
         {
             if (ModelState.IsValid)
             {
-                _productService.AddProduct(product); // Veritabanı işlemi servise devredildi
+                _productService.AddProduct(product);
                 return RedirectToAction("Index");
             }
             return View(product);
@@ -56,7 +59,7 @@ namespace ProductManagementPanel.Controllers
         {
             if (ModelState.IsValid)
             {
-                _productService.UpdateProduct(product); // Veritabanı işlemi servise devredildi
+                _productService.UpdateProduct(product); 
                 return RedirectToAction("Index");
             }
             return View(product);
@@ -65,7 +68,7 @@ namespace ProductManagementPanel.Controllers
         [Authorize(Roles = "Admin, Co-Admin")]
         public IActionResult Delete(int id)
         {
-            _productService.DeleteProduct(id); // Veritabanı işlemi servise devredildi
+            _productService.DeleteProduct(id); 
             return RedirectToAction("Index");
         }
     }

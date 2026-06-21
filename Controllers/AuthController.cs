@@ -7,11 +7,12 @@ using System.Security.Claims;
 
 namespace ProductManagementPanel.Controllers
 {
+    /// Kullanıcı kayıt (Register), giriş (Login) ve çıkış (Logout) işlemlerinin HTTP isteklerini yöneten Controller sınıfı.
+    /// Veritabanı doğrulamalarını IAuthService üzerinden yapar, başarılı durumlarda şifreli çerez (Cookie) oluşturarak oturumu başlatır.
     public class AuthController : Controller
     {
         private readonly IAuthService _authService;
 
-        // Artık ApplicationDbContext yok, IAuthService var
         public AuthController(IAuthService authService)
         {
             _authService = authService;
@@ -27,7 +28,7 @@ namespace ProductManagementPanel.Controllers
         {
             if (ModelState.IsValid)
             {
-                _authService.RegisterUser(model); // Veritabanı işini Servise devrettik
+                _authService.RegisterUser(model); 
                 return RedirectToAction("Login");
             }
             return View(model);
@@ -43,7 +44,6 @@ namespace ProductManagementPanel.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Doğrulama işini Servise devrettik. Bize ya User döner, ya da null.
                 var user = _authService.ValidateUser(model);
 
                 if (user != null)

@@ -3,6 +3,7 @@ using ProductManagementPanel.Models;
 
 namespace ProductManagementPanel.Services
 {
+    // IUserService sözleşmesini uygulayan, kullanıcı yönetimi ve yetkilendirme iş mantığını (Business Logic) barındıran servis sınıfı.
     public class UserService : IUserService
     {
         private readonly ApplicationDbContext _context;

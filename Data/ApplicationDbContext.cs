@@ -11,8 +11,6 @@ namespace ProductManagementPanel.Data
         {
         }
 
-        // Bu satır, veritabanında "Products" adında bir tablo oluşturulacağını söyler.
-        // C# tarafındaki 'Product' modelini, veritabanındaki 'Products' tablosuna bağlar.
         public DbSet<Product> Products { get; set; }
         public DbSet<User> Users { get; set; }
     }

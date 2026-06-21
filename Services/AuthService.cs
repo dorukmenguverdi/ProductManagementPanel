@@ -4,6 +4,7 @@ using ProductManagementPanel.ViewModels;
 
 namespace ProductManagementPanel.Services
 {
+    // IAuthService sözleşmesini uygulayan ve kimlik doğrulama süreçlerinin veritabanı işlemlerini yürüten servis sınıfı.
     public class AuthService : IAuthService
     {
         private readonly ApplicationDbContext _context;

@@ -1,16 +1,18 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ProductManagementPanel.Services; // Servisi dahil ettik
+using ProductManagementPanel.Services;
 
 namespace ProductManagementPanel.Controllers
 {
+    /// Kullanıcı yönetimi (listeleme, rol değiştirme, silme) işlemlerini yürüten Controller sınıfı.
+    /// Güvenlik prensipleri gereği sınıf seviyesinde sınırlandırılmıştır; yalnızca 'Admin' rolüne sahip kullanıcılar erişebilir.
+    
     [Authorize(Roles = "Admin")]
     public class UserController : Controller
     {
         private readonly IUserService _userService;
 
-        // Artık ApplicationDbContext yerine IUserService kullanıyoruz
-        public UserController(IUserService userService)
+          public UserController(IUserService userService)
         {
             _userService = userService;
         }
@@ -31,7 +33,6 @@ namespace ProductManagementPanel.Controllers
         [HttpPost]
         public IActionResult DeleteUser(int id)
         {
-            // İşi servise devrediyoruz, işlemi yapan kişinin adını (User.Identity?.Name) parametre olarak gönderiyoruz
             _userService.DeleteUser(id, User.Identity?.Name);
             return RedirectToAction("Index");
         }

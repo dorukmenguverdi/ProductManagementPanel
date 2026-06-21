@@ -2,8 +2,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ProductManagementPanel.ViewModels
 {
-    // Bu sınıf sadece arayüzden (View) kayıt verilerini güvenli bir şekilde almak için kullanılır.
-    // Veritabanına doğrudan gitmez, "Role" veya "Id" gibi kritik verileri içermez.
+    // Yeni kullanıcı kayıt (Register) işlemleri sırasında arayüzden gelen verileri taşıyan DTO sınıfı.
+    // Güvenlik gereği 'Role' veya 'Id' gibi sistem kritik verileri içermez
     public class RegisterViewModel
     {
         [Required(ErrorMessage = "Kullanıcı adı zorunludur.")]
@@ -14,7 +14,7 @@ namespace ProductManagementPanel.ViewModels
         [DataType(DataType.Password)]
         public string Password { get; set; } = string.Empty;
 
-        // Gerçek dünyada aranan o profesyonel detay: Şifre Doğrulama alanı
+
         [Required(ErrorMessage = "Şifre tekrarı zorunludur.")]
         [DataType(DataType.Password)]
         [Compare("Password", ErrorMessage = "Şifreler birbiriyle uyuşmuyor.")]

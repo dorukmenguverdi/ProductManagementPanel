@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ProductManagementPanel.Models
 {
+    /// Veritabanındaki 'Users' tablosunu temsil eden varlık (Entity) sınıfı.
     public class User
     {
         [Key]

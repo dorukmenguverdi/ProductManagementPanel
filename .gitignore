@@ -1,0 +1,20 @@
+
+# 1. Derleme Sonuçları
+bin/
+obj/
+
+# 2. Yerel Veritabanı Dosyaları
+*.db
+*.db-shm
+*.db-wal
+app.db
+
+# 3. Kişisel IDE Ayarları
+.vs/
+.vscode/
+*.user
+*.suo
+
+# 4. İşletim Sistemi Kalıntıları
+.DS_Store
+Thumbs.db

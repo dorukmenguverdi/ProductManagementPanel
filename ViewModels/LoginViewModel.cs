@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ProductManagementPanel.ViewModels
 {
+    // Kullanıcı giriş işlemleri (Login) sırasında arayüzden (View) alınacak verileri taşıyan DTO sınıfı.
     public class LoginViewModel
     {
         [Required(ErrorMessage = "Kullanıcı adı boş bırakılamaz.")]

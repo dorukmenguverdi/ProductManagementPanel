@@ -3,12 +3,11 @@ using ProductManagementPanel.Models;
 
 namespace ProductManagementPanel.Services
 {
-    // Bu sınıf IProductService sözleşmesini uygular (implement eder).
+    // IProductService sözleşmesini uygulayan ve ürünlerle ilgili tüm veritabanı (CRUD) işlemlerini gerçekleştiren servis sınıfı
     public class ProductService : IProductService
     {
         private readonly ApplicationDbContext _context;
 
-        // Veritabanı bağlantısı artık Controller yerine doğrudan bu servise enjekte ediliyor.
         public ProductService(ApplicationDbContext context)
         {
             _context = context;
@@ -19,7 +18,7 @@ namespace ProductManagementPanel.Services
             return _context.Products.ToList();
         }
 
-        public Product GetProductById(int id)
+        public Product? GetProductById(int id)
         {
             return _context.Products.Find(id);
         }
